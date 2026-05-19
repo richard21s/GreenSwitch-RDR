@@ -32,7 +32,9 @@ Cukup buka tautan berikut melalui browser komputer Anda:
 
 ## 3. Cara Mengganti API Key (Jika Terkena Limit / Kuota Habis)
 
-Aplikasi ini menggunakan API Key Google Gemini agar fitur kecerdasan buatan dapat bekerja. Jika Anda menemui error seperti `Resource Exhausted`, `Quota Exceeded`, atau fitur chat mati total, artinya API Key sedang limit dan Anda harus menggantinya.
+Aplikasi ini menggunakan API Key Google Gemini agar fitur kecerdasan buatan dapat bekerja. Anda harus mengganti API Key jika menemukan **Ciri-ciri API Key Limit / Kuota Habis** berikut ini:
+- Jika fitur *chatbot* menjawab dengan kalimat: *"Maaf, agent sedang mengalami gangguan saat merespons."*
+- Jika pada bagian Rekomendasi/Keputusan Agen terdapat kata-kata **"(Fallback)"** (ini menandakan AI gagal merespons dan sistem terpaksa mengeluarkan teks *default*).
 
 **API KEY alternatif yang dapat digunakan**
 1. AIzaSyDtjBLKueN0l8wOsqJSVWjMvp5DRP5NZWM
@@ -45,7 +47,7 @@ Aplikasi ini menggunakan API Key Google Gemini agar fitur kecerdasan buatan dapa
 4. Cari baris **ke-46** yang berisi penugasan `DEFAULT_API_KEY`:
    ```python
    # --- Setup API Key ---
-   DEFAULT_API_KEY = "AIzaSyC0Uu6OnFL7SEELAMn0f-R745GqfMYMdbc"
+   DEFAULT_API_KEY = "AIzaSyDtjBLKueN0l8wOsqJSVWjMvp5DRP5NZWM"
    ```
 5. Ganti teks string tersebut dengan API key baru yang Anda salin dari AI Studio:
    ```python
@@ -59,14 +61,14 @@ Aplikasi ini menggunakan API Key Google Gemini agar fitur kecerdasan buatan dapa
 
 ## 4. Penjelasan Mekanisme Scraping & API Fetching
 
-GreenSwitch tidak menggunakan basis data statis untuk menghitung biaya BBM dan listrik. Aplikasi ini memuat modul `scraper.py` untuk menarik dua data utama secara *real-time* sebelum AI melakukan kalkulasi:
+GreenSwitch menggunakan data terpercaya untuk menghitung biaya BBM dan listrik. Aplikasi ini memuat modul `scraper.py` untuk menarik/mengambil dua data utama sebelum AI melakukan kalkulasi:
 
 1. **Harga BBM Terkini:** Mengambil struktur harga JSON publik secara langsung dari REST API resmi MyPertamina (`https://api.web.mypertamina.id/price`). Data yang difilter adalah Pertalite, Pertamax, dan Pertamax Turbo di wilayah DKI Jakarta.
-2. **Tarif Listrik PLN:** Menggunakan BeautifulSoup untuk me-*scrape* tabel penyesuaian tarif (*Tariff Adjustment*) dari halaman publik Wikipedia yang berisi data tarif per kWh.
+2. **Tarif Listrik PLN:** Data tarif listrik tidak diambil secara otomatis (scraping), melainkan diacu secara faktual berdasarkan rilis resmi tabel penyesuaian tarif (*Tariff Adjustment*) dari website resmi PLN (`https://www.pln.co.id/customer-en/electricity-tariffs-en/tariff-adjustment-en`). Data ini mencakup tarif per kWh untuk berbagai golongan rumah tangga umum (R-1/900 VA hingga R-2/3500+ VA).
 
 ### Mengapa Hanya Data Ini yang Diambil Secara Live?
 Dua variabel ini (Harga BBM non-subsidi dan Tarif Penyesuaian Listrik) **bersifat sangat fluktuatif** dan kebijakan penyesuaian harga (naik/turun) sering kali diterapkan oleh pemerintah setiap bulannya. 
 
 Mengambil data ini secara *real-time* adalah langkah **sangat krusial** agar perhitungan komparasi biaya operasional dan ROI (Return of Investment) dari *AI Agent* selalu menggunakan angka pasar hari ini, sehingga laporan kelayakan yang diberikan terhindar dari bias data statis yang sudah usang.
 
-Sedangkan untuk variabel lain (misal: harga mobil EV di pasaran), kita mengandalkan keluasan wawasan dari Large Language Model (Gemini) itu sendiri yang sudah memiliki basis pengetahuan harga pasar mobil tanpa perlu dilakukan *scraping* berlebihan yang membebani server aplikasi.
+Sedangkan untuk variabel lain, khususnya **data referensi mobil/motor Listrik (EV)** yang direkomendasikan beserta kisaran harganya, data tersebut dikumpulkan secara **manual** dengan merujuk langsung pada brosur dan situs web resmi dari masing-masing agen pemegang merek (APM) kendaraan terkait. Hal ini dilakukan untuk menjamin keakuratan tipe unit dan harga on-the-road (OTR) yang paling relevan dengan kondisi pasar saat ini, tanpa perlu membebani server dengan proses *scraping* berlebihan.
