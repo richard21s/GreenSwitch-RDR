@@ -1,39 +1,22 @@
 import logging
 import re
-import subprocess
-from playwright.sync_api import sync_playwright
+import requests
 import streamlit as st
 
 logging.basicConfig(level=logging.INFO)
 
 # --- Compatibility Helpers for older Streamlit versions ---
-def safe_cache_resource(*args, **kwargs):
-    if hasattr(st, "cache_resource"):
-        return st.cache_resource(*args, **kwargs)
-    return st.experimental_singleton(*args, **kwargs)
-
 def safe_cache_data(*args, **kwargs):
     if hasattr(st, "cache_data"):
         return st.cache_data(*args, **kwargs)
     return st.experimental_memo(*args, **kwargs)
 
-@safe_cache_resource
-def install_playwright_browsers():
-    try:
-        logging.info("Installing Playwright chromium browser...")
-        subprocess.run(["playwright", "install", "chromium"], check=True)
-        logging.info("Playwright chromium browser installed successfully.")
-    except Exception as e:
-        logging.error(f"Failed to install playwright browsers: {e}")
-
-install_playwright_browsers()
-
 
 @safe_cache_data(ttl=3600)  # Cache selama 1 jam (Kompatibel dengan Streamlit lama & modern)
 def get_bbm_price(jenis_bbm="Pertalite"):
     """
-    Scrapes the current BBM price dynamically from MyPertamina using Playwright.
-    Falls back to a default value if scraping fails.
+    Scrapes the current BBM price dynamically from the MyPertamina API.
+    Falls back to a default value if the API call fails.
     """
     default_prices = {
         "Pertalite": 10000,
@@ -42,41 +25,40 @@ def get_bbm_price(jenis_bbm="Pertalite"):
     }
     default_price = default_prices.get(jenis_bbm, 10000)
     
+    url = "https://api.web.mypertamina.id/price"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    }
+    
     try:
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
-            context = browser.new_context(viewport={"width": 1280, "height": 1024})
-            page = context.new_page()
-            url = "https://mypertamina.id/about/product-price"
+        logging.info(f"Mengambil harga BBM terupdate dari API MyPertamina...")
+        response = requests.get(url, headers=headers, timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            items = data.get("data", {}).get("data", [])
             
-            logging.info(f"Membuka {url} dengan Playwright...")
-            page.goto(url, timeout=10000)
-            
-            row_selector = "table tr:has-text('Prov. DKI Jakarta')"
-            page.wait_for_selector(row_selector, timeout=3000)
-            
-            col_idx = 2
-            if jenis_bbm.lower() == "pertamax":
-                col_idx = 3
-            elif jenis_bbm.lower() == "pertamax turbo":
-                col_idx = 4
-                
-            price_text = page.locator(f"{row_selector} td:nth-child({col_idx})").first.inner_text()
-            
-            if price_text:
-                match = re.search(r'(\d{2,3}[\.,]\d{3})', price_text)
-                if match:
-                    price_str = match.group(1).replace('.', '').replace(',', '')
-                    logging.info(f"Berhasil scrape harga {jenis_bbm}: Rp {price_str}")
-                    browser.close()
-                    return int(price_str)
-            
-            logging.info(f"Gagal memparsing angka dari teks: {price_text}")
-            browser.close()
-            return default_price
-            
+            # Cari Prov. DKI Jakarta
+            for item in items:
+                prov = item.get("province", "")
+                if "dki jakarta" in prov.lower() or "jakarta" in prov.lower():
+                    list_price = item.get("list_price", [])
+                    # Cari produk yang sesuai
+                    for price_item in list_price:
+                        product_name = price_item.get("product", "").upper()
+                        if jenis_bbm.upper() in product_name:
+                            price_str = str(price_item.get("price", ""))
+                            # Ekstrak angka saja (misal: "Rp 10.000" atau "12300")
+                            match = re.search(r'(\d{2,3}[\.,]\d{3}|\d+)', price_str)
+                            if match:
+                                val = match.group(1).replace('.', '').replace(',', '')
+                                logging.info(f"Berhasil mengambil harga BBM {jenis_bbm} dari API: Rp {val}")
+                                return int(val)
+                                
+        logging.warning(f"Gagal mengambil harga BBM dinamis dari API MyPertamina. Menggunakan harga default {jenis_bbm}: Rp {default_price:,}")
+        return default_price
+        
     except Exception as e:
-        logging.warning(f"Gagal mengambil harga BBM dinamis dari MyPertamina (kemungkinan diblokir Cloudflare/anti-bot di server Cloud). Menggunakan harga default {jenis_bbm}: Rp {default_price:,}")
+        logging.warning(f"Gagal memanggil API MyPertamina: {e}. Menggunakan harga default {jenis_bbm}: Rp {default_price:,}")
         return default_price
 
 def get_pln_tariffs():
