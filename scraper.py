@@ -5,7 +5,7 @@ import streamlit as st
 
 logging.basicConfig(level=logging.INFO)
 
-@st.experimental_memo(ttl=3600)  # Cache selama 1 jam (Kompatibel dengan Streamlit lama)
+@st.cache_data(ttl=3600)  # Cache selama 1 jam (Kompatibel dengan Streamlit modern)
 def get_bbm_price(jenis_bbm="Pertalite"):
     """
     Scrapes the current BBM price dynamically from MyPertamina using Playwright.
