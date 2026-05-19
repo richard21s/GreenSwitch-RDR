@@ -122,7 +122,7 @@ st.markdown("""
     }
 
     /* Buttons -> bergaya gradient emerald rounded-xl shadow-lg */
-    .stButton > button, .stFormSubmitButton > button {
+    .stButton button, .stFormSubmitButton button {
         background: linear-gradient(to right, #059669, #047857) !important;
         color: white !important;
         border-radius: 1rem !important;
@@ -133,13 +133,13 @@ st.markdown("""
         transition: all 0.3s ease !important;
         width: 100% !important;
     }
-    .stButton > button:hover, .stFormSubmitButton > button:hover {
+    .stButton button:hover, .stFormSubmitButton button:hover {
         transform: translateY(-2px) !important;
         box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.3) !important;
         color: white !important;
         border: none !important;
     }
-    .stButton > button:active, .stFormSubmitButton > button:active {
+    .stButton button:active, .stFormSubmitButton button:active {
         transform: translateY(0) !important;
     }
 
@@ -251,7 +251,7 @@ st.markdown("""
     }
 
     /* Native Button Styling inside Step 0 */
-    div[data-testid="stVerticalBlock"]:has(.step0-active) .stButton > button {
+    div[data-testid="stVerticalBlock"]:has(.step0-active) .stButton button {
         background: linear-gradient(to right, #10b981, #059669) !important;
         color: white !important;
         border: none !important;
@@ -265,7 +265,7 @@ st.markdown("""
         display: inline-block !important;
         margin-top: 0.5rem !important;
     }
-    div[data-testid="stVerticalBlock"]:has(.step0-active) .stButton > button:hover {
+    div[data-testid="stVerticalBlock"]:has(.step0-active) .stButton button:hover {
         transform: scale(1.02) !important;
         box-shadow: 0 15px 30px -5px rgba(5, 150, 105, 0.5) !important;
     }
