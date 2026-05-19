@@ -122,6 +122,9 @@ st.markdown("""
     }
 
     /* Buttons -> bergaya gradient emerald rounded-xl shadow-lg */
+    .stButton, .stFormSubmitButton, div[data-testid="stButton"], div[data-testid="stFormSubmitButton"] {
+        width: 100% !important;
+    }
     .stButton button, .stFormSubmitButton button {
         background: linear-gradient(to right, #059669, #047857) !important;
         color: white !important;
