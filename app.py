@@ -491,7 +491,7 @@ from pathlib import Path
 from PIL import Image
 import io
 
-@st.experimental_memo
+@st.cache_data
 def get_logo_html():
     logo_path = Path(__file__).parent / "asset" / "LogoGreenSwitch-1.png"
     if logo_path.exists():
@@ -532,7 +532,7 @@ if st.session_state.step == 0:
             
             if st.button("Mulai Analisis ➔", key="start_btn"):
                 st.session_state.step = 1
-                st.experimental_rerun()
+                st.rerun()
                 
             st.markdown('</div>', unsafe_allow_html=True)
                 
@@ -602,7 +602,7 @@ elif st.session_state.step == 1:
         with col_back:
             if st.button("Kembali"):
                 st.session_state.step = 0
-                st.experimental_rerun()
+                st.rerun()
         with col_submit:
             analyze_btn = st.button("✨ Analisis dengan Agent")
         
@@ -660,7 +660,7 @@ elif st.session_state.step == 1:
             
             st.session_state.parsed_result = result
             st.session_state.step = 2
-            st.experimental_rerun()
+            st.rerun()
         except Exception as e:
             st.error(f"❌ Terjadi Kesalahan Eksekusi: {str(e)}")
 
@@ -722,7 +722,7 @@ elif st.session_state.step == 2:
     with col_btn:
         if st.button("⚙️ Sesuaikan Parameter"):
             st.session_state.step = 1
-            st.experimental_rerun()
+            st.rerun()
 
     # NARRATIVE BOX AI
     st.markdown(f"""
@@ -939,7 +939,7 @@ elif st.session_state.step == 2:
             st.session_state.conversation.append({"role": "assistant", "content": reply})
             
             chat_think_placeholder.empty()
-            st.experimental_rerun()
+            st.rerun()
         except Exception as e:
             st.error(f"❌ Error: {str(e)}")
 
