@@ -43,8 +43,7 @@ def safe_form_submit_button(label, **kwargs):
         raise e
 
 # --- Setup API Key ---
-import os
-DEFAULT_API_KEY = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY", ""))
+DEFAULT_API_KEY = "AIzaSyDtjBLKueN0l8wOsqJSVWjMvp5DRP5NZWM"
 
 # ─── Konfigurasi halaman ──────────────────────────────────────────────
 from PIL import Image
