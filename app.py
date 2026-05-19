@@ -684,11 +684,20 @@ elif st.session_state.step == 1:
                 """
                 <script>
                     setTimeout(() => {
-                        const mainSection = window.parent.document.querySelector('section.main');
-                        if (mainSection) {
-                            mainSection.scrollTo({ top: mainSection.scrollHeight, behavior: 'smooth' });
-                        }
-                        window.parent.scrollTo({ top: window.parent.document.body.scrollHeight, behavior: 'smooth' });
+                        const parent = window.parent.document;
+                        const targets = [
+                            parent.querySelector('[data-testid="stAppViewContainer"]'),
+                            parent.querySelector('[data-testid="stMain"]'),
+                            parent.querySelector('section.main'),
+                            parent.querySelector('.stApp'),
+                            parent.documentElement,
+                            parent.body
+                        ];
+                        targets.forEach(el => {
+                            if (el) {
+                                el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+                            }
+                        });
                     }, 100);
                 </script>
                 """,
@@ -719,11 +728,20 @@ elif st.session_state.step == 2:
             """
             <script>
                 setTimeout(() => {
-                    const mainSection = window.parent.document.querySelector('section.main');
-                    if (mainSection) {
-                        mainSection.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
-                    window.parent.scrollTo({ top: 0, behavior: 'smooth' });
+                    const parent = window.parent.document;
+                    const targets = [
+                        parent.querySelector('[data-testid="stAppViewContainer"]'),
+                        parent.querySelector('[data-testid="stMain"]'),
+                        parent.querySelector('section.main'),
+                        parent.querySelector('.stApp'),
+                        parent.documentElement,
+                        parent.body
+                    ];
+                    targets.forEach(el => {
+                        if (el) {
+                            el.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                    });
                 }, 100);
             </script>
             """,
