@@ -45,7 +45,8 @@ def get_bbm_price(jenis_bbm="Pertalite"):
     try:
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
-            page = browser.new_page()
+            context = browser.new_context(viewport={"width": 1280, "height": 1024})
+            page = context.new_page()
             url = "https://mypertamina.id/about/product-price"
             
             logging.info(f"Membuka {url} dengan Playwright...")
