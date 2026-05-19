@@ -5,6 +5,5 @@ requests
 beautifulsoup4
 google-generativeai
 python-dotenv
-playwright
 plotly
 markdown
