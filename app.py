@@ -507,18 +507,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ─── Sidebar untuk API Key ──────────────────────────────────────────
-with st.sidebar:
-    st.markdown("### 🔑 Konfigurasi API Key")
-    user_api_key = st.text_input(
-        "Gemini API Key",
-        value=DEFAULT_API_KEY,
-        type="password",
-        help="Dapatkan API key gratis dari Google AI Studio."
-    )
-    st.markdown("[Dapatkan API Key Gemini](https://aistudio.google.com/)")
-
-GEMINI_API_KEY = user_api_key if user_api_key else ""
+GEMINI_API_KEY = DEFAULT_API_KEY
 
 # ─── Init State & Agent ───────────────────────────────────────────────
 if 'step' not in st.session_state:
