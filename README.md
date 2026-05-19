@@ -23,6 +23,9 @@ Aplikasi GreenSwitch telah di-*deploy* secara langsung (live) ke cloud, sehingga
 Cukup buka tautan berikut melalui browser komputer Anda:
  **[https://greenswitch-rdr.streamlit.app/](https://greenswitch-rdr.streamlit.app/)**
 
+ > [!NOTE]
+> **Penting:** Kode dalam repositori ini telah dikustomisasi dan dioptimalkan secara khusus untuk berjalan di atas arsitektur *Streamlit Cloud* (termasuk injeksi Javascript lintas-iframe khusus). Aplikasi ini **tidak ditujukan untuk dijalankan di lingkungan lokal (localhost)** karena akan terjadi inkonsistensi struktur DOM dan antarmuka.
+
 ### Skenario Penggunaan Aplikasi:
 1. **Memulai Analisis:** Di halaman depan (Hero Section), baca sekilas lalu klik tombol hijau **"Mulai Analisis ➔"**.
 2. **Mengisi Profil Kendaraan:** Anda akan masuk ke bagian formulir. Silakan pilih jenis kendaraan BBM Anda saat ini (misal: Motor Matic), lalu masukkan estimasi jarak tempuh harian Anda menggunakan *slider*. Tentukan juga budget Anda jika ingin membeli EV (misal: Rp 20 Juta).
