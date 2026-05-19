@@ -552,11 +552,12 @@ if st.session_state.step == 0:
         col_left, col_right = st.columns([1.2, 0.8], gap="large")
         with col_left:
             st.markdown('<div class="hero-left-col">', unsafe_allow_html=True)
-            st.markdown("""
-            <div class="ai-badge">✨ AI AGENT REASONING</div>
-            <h1 class="hero-title-react">Transisi ke EV dengan <span class="gradient-text">Data & Fakta.</span></h1>
-            <p class="hero-desc-react">GreenSwitch menganalisis profil harian Anda untuk memberikan rekomendasi beralasan. Apakah beralih ke kendaraan listrik benar-benar menguntungkan Anda saat ini?</p>
-            """, unsafe_allow_html=True)
+            st.markdown(
+                '<div class="ai-badge">✨ AI AGENT REASONING</div>'
+                '<h1 class="hero-title-react">Transisi ke EV dengan <span class="gradient-text">Data & Fakta.</span></h1>'
+                '<p class="hero-desc-react">GreenSwitch menganalisis profil harian Anda untuk memberikan rekomendasi beralasan. Apakah beralih ke kendaraan listrik benar-benar menguntungkan Anda saat ini?</p>',
+                unsafe_allow_html=True
+            )
             
             if st.button("Mulai Analisis ➔", key="start_btn"):
                 st.session_state.step = 1
