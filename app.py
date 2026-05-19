@@ -10,8 +10,21 @@ import plotly.graph_objects as go
 from scraper import get_pln_tariffs, get_bbm_price
 from agent import EnergyTransitAgent
 
-# --- Setup API Key (Hardcoded) ---
-GEMINI_API_KEY = "AIzaSyD19lP8AxRZuj8fvKlIf3NBx6VSXQmNHYk"
+# --- Compatibility Helpers for older Streamlit versions ---
+def safe_cache_data(*args, **kwargs):
+    if hasattr(st, "cache_data"):
+        return st.cache_data(*args, **kwargs)
+    return st.experimental_memo(*args, **kwargs)
+
+def safe_rerun():
+    if hasattr(st, "rerun"):
+        st.rerun()
+    else:
+        st.experimental_rerun()
+
+# --- Setup API Key ---
+import os
+DEFAULT_API_KEY = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY", ""))
 
 # ─── Konfigurasi halaman ──────────────────────────────────────────────
 from PIL import Image
@@ -467,15 +480,30 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# ─── Sidebar untuk API Key ──────────────────────────────────────────
+with st.sidebar:
+    st.markdown("### 🔑 Konfigurasi API Key")
+    user_api_key = st.text_input(
+        "Gemini API Key",
+        value=DEFAULT_API_KEY,
+        type="password",
+        help="Dapatkan API key gratis dari Google AI Studio."
+    )
+    st.markdown("[Dapatkan API Key Gemini](https://aistudio.google.com/)")
+
+GEMINI_API_KEY = user_api_key if user_api_key else ""
+
 # ─── Init State & Agent ───────────────────────────────────────────────
 if 'step' not in st.session_state:
     st.session_state.step = 0
-if 'agent' not in st.session_state:
+if 'agent' not in st.session_state or st.session_state.get('last_api_key') != GEMINI_API_KEY:
     st.session_state.agent = EnergyTransitAgent(api_key=GEMINI_API_KEY)
+    st.session_state.last_api_key = GEMINI_API_KEY
 if "conversation" not in st.session_state: 
     st.session_state.conversation = []
 if "parsed_result" not in st.session_state: 
     st.session_state.parsed_result = None
+
 
 # Data Referensi
 KENDARAAN = [
@@ -491,7 +519,7 @@ from pathlib import Path
 from PIL import Image
 import io
 
-@st.cache_data
+@safe_cache_data
 def get_logo_html():
     logo_path = Path(__file__).parent / "asset" / "LogoGreenSwitch-1.png"
     if logo_path.exists():
@@ -532,7 +560,7 @@ if st.session_state.step == 0:
             
             if st.button("Mulai Analisis ➔", key="start_btn"):
                 st.session_state.step = 1
-                st.rerun()
+                safe_rerun()
                 
             st.markdown('</div>', unsafe_allow_html=True)
                 
@@ -602,7 +630,7 @@ elif st.session_state.step == 1:
         with col_back:
             if st.button("Kembali"):
                 st.session_state.step = 0
-                st.rerun()
+                safe_rerun()
         with col_submit:
             analyze_btn = st.button("✨ Analisis dengan Agent")
         
@@ -660,7 +688,7 @@ elif st.session_state.step == 1:
             
             st.session_state.parsed_result = result
             st.session_state.step = 2
-            st.rerun()
+            safe_rerun()
         except Exception as e:
             st.error(f"❌ Terjadi Kesalahan Eksekusi: {str(e)}")
 
@@ -722,7 +750,7 @@ elif st.session_state.step == 2:
     with col_btn:
         if st.button("⚙️ Sesuaikan Parameter"):
             st.session_state.step = 1
-            st.rerun()
+            safe_rerun()
 
     # NARRATIVE BOX AI
     st.markdown(f"""
@@ -915,7 +943,7 @@ elif st.session_state.step == 2:
     with st.form("chat_form", clear_on_submit=True):
         col_input, col_btn = st.columns([5, 1])
         with col_input: 
-            user_input = st.text_input("", placeholder="Ketik pertanyaan lanjutan untuk AI (Misal: Apakah bengkel resminya banyak di Jakarta?).")
+            user_input = st.text_input(" ", placeholder="Ketik pertanyaan lanjutan untuk AI (Misal: Apakah bengkel resminya banyak di Jakarta?).")
         with col_btn: 
             submitted = st.form_submit_button("Kirim")
 
@@ -939,7 +967,7 @@ elif st.session_state.step == 2:
             st.session_state.conversation.append({"role": "assistant", "content": reply})
             
             chat_think_placeholder.empty()
-            st.rerun()
+            safe_rerun()
         except Exception as e:
             st.error(f"❌ Error: {str(e)}")
 
