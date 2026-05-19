@@ -1,0 +1,8 @@
+streamlit
+pandas
+altair==4.2.2
+requests
+beautifulsoup4
+google-generativeai
+python-dotenv
+playwright
