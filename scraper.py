@@ -1,11 +1,35 @@
 import logging
 import re
+import subprocess
 from playwright.sync_api import sync_playwright
 import streamlit as st
 
 logging.basicConfig(level=logging.INFO)
 
-@st.cache_data(ttl=3600)  # Cache selama 1 jam (Kompatibel dengan Streamlit modern)
+# --- Compatibility Helpers for older Streamlit versions ---
+def safe_cache_resource(*args, **kwargs):
+    if hasattr(st, "cache_resource"):
+        return st.cache_resource(*args, **kwargs)
+    return st.experimental_singleton(*args, **kwargs)
+
+def safe_cache_data(*args, **kwargs):
+    if hasattr(st, "cache_data"):
+        return st.cache_data(*args, **kwargs)
+    return st.experimental_memo(*args, **kwargs)
+
+@safe_cache_resource
+def install_playwright_browsers():
+    try:
+        logging.info("Installing Playwright chromium browser...")
+        subprocess.run(["playwright", "install", "chromium"], check=True)
+        logging.info("Playwright chromium browser installed successfully.")
+    except Exception as e:
+        logging.error(f"Failed to install playwright browsers: {e}")
+
+install_playwright_browsers()
+
+
+@safe_cache_data(ttl=3600)  # Cache selama 1 jam (Kompatibel dengan Streamlit lama & modern)
 def get_bbm_price(jenis_bbm="Pertalite"):
     """
     Scrapes the current BBM price dynamically from MyPertamina using Playwright.
