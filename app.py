@@ -216,7 +216,7 @@ st.markdown("""
         font-size: 0.75rem !important;
         font-weight: 800 !important;
         letter-spacing: 0.1em !important;
-        margin-bottom: 1.5rem !important;
+        margin-bottom: 0.8rem !important;
         border: 1px solid rgba(16, 185, 129, 0.2) !important;
         width: fit-content !important;
     }
@@ -226,7 +226,7 @@ st.markdown("""
         font-weight: 950 !important;
         color: #111827 !important;
         line-height: 1.15 !important;
-        margin-bottom: 1.5rem !important;
+        margin-bottom: 0.6rem !important;
         margin-top: 0 !important;
         letter-spacing: -0.02em !important;
     }
@@ -242,7 +242,7 @@ st.markdown("""
         font-size: 1.125rem !important;
         font-weight: 500 !important;
         line-height: 1.6 !important;
-        margin-bottom: 1rem !important;
+        margin-bottom: 1.6rem !important;
         margin-top: 0 !important;
     }
 
@@ -551,11 +551,12 @@ if st.session_state.step == 0:
         
         col_left, col_right = st.columns([1.2, 0.8], gap="large")
         with col_left:
-            st.markdown('<div class="hero-left-col">', unsafe_allow_html=True)
             st.markdown(
+                '<div class="hero-left-col">'
                 '<div class="ai-badge">✨ AI AGENT REASONING</div>'
                 '<h1 class="hero-title-react">Transisi ke EV dengan <span class="gradient-text">Data & Fakta.</span></h1>'
-                '<p class="hero-desc-react">GreenSwitch menganalisis profil harian Anda untuk memberikan rekomendasi beralasan. Apakah beralih ke kendaraan listrik benar-benar menguntungkan Anda saat ini?</p>',
+                '<p class="hero-desc-react">GreenSwitch menganalisis profil harian Anda untuk memberikan rekomendasi beralasan. Apakah beralih ke kendaraan listrik benar-benar menguntungkan Anda saat ini?</p>'
+                '</div>',
                 unsafe_allow_html=True
             )
             
@@ -563,24 +564,23 @@ if st.session_state.step == 0:
                 st.session_state.step = 1
                 safe_rerun()
                 
-            st.markdown('</div>', unsafe_allow_html=True)
-                
         with col_right:
-            st.markdown('<div class="hero-right-col">', unsafe_allow_html=True)
-            st.markdown("""
-            <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                <div class="hero-circle">
-                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <rect width="16" height="10" x="2" y="7" rx="2" ry="2" />
-                        <line x1="22" x2="22" y1="11" y2="13" />
-                        <path d="m11 7-3 5h4l-3 5" />
-                    </svg>
-                    <div class="floating-badge badge-top">🌱</div>
-                    <div class="floating-badge badge-bottom">📈</div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
+            st.markdown(
+                '<div class="hero-right-col">'
+                '<div style="display: flex; justify-content: center; align-items: center; height: 100%;">'
+                '  <div class="hero-circle">'
+                '    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'
+                '      <rect width="16" height="10" x="2" y="7" rx="2" ry="2" />'
+                '      <line x1="22" x2="22" y1="11" y2="13" />'
+                '      <path d="m11 7-3 5h4l-3 5" />'
+                '    </svg>'
+                '    <div class="floating-badge badge-top">🌱</div>'
+                '    <div class="floating-badge badge-bottom">📈</div>'
+                '  </div>'
+                '</div>'
+                '</div>',
+                unsafe_allow_html=True
+            )
 
 # ─── STEP 1: FORM INPUT TERPUSAT ──────────────────────────────────────
 elif st.session_state.step == 1:
