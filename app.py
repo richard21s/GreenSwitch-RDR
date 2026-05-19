@@ -22,6 +22,26 @@ def safe_rerun():
     else:
         st.experimental_rerun()
 
+def safe_button(label, key=None, **kwargs):
+    kwargs_with_width = kwargs.copy()
+    kwargs_with_width["use_container_width"] = True
+    try:
+        return st.button(label, key=key, **kwargs_with_width)
+    except TypeError as e:
+        if "use_container_width" in str(e):
+            return st.button(label, key=key, **kwargs)
+        raise e
+
+def safe_form_submit_button(label, **kwargs):
+    kwargs_with_width = kwargs.copy()
+    kwargs_with_width["use_container_width"] = True
+    try:
+        return st.form_submit_button(label, **kwargs_with_width)
+    except TypeError as e:
+        if "use_container_width" in str(e):
+            return st.form_submit_button(label, **kwargs)
+        raise e
+
 # --- Setup API Key ---
 import os
 DEFAULT_API_KEY = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY", ""))
@@ -567,7 +587,7 @@ if st.session_state.step == 0:
                 unsafe_allow_html=True
             )
             
-            if st.button("Mulai Analisis ➔", key="start_btn"):
+            if safe_button("Mulai Analisis ➔", key="start_btn"):
                 st.session_state.step = 1
                 safe_rerun()
                 
@@ -636,11 +656,11 @@ elif st.session_state.step == 1:
         
         col_back, col_submit = st.columns([1, 2])
         with col_back:
-            if st.button("Kembali"):
+            if safe_button("Kembali"):
                 st.session_state.step = 0
                 safe_rerun()
         with col_submit:
-            analyze_btn = st.button("✨ Analisis dengan Agent")
+            analyze_btn = safe_button("✨ Analisis dengan Agent")
         
     if analyze_btn:
         st.session_state.user_data = {
@@ -756,7 +776,7 @@ elif st.session_state.step == 2:
         st.markdown('<div style="display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; background: #d1fae5; color: #065f46; border-radius: 99px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; margin-bottom: 0.5rem; border: 1px solid #a7f3d0;">✨ INSIGHTS</div>', unsafe_allow_html=True)
         st.markdown('<h2 style="font-size: 2.2rem; font-weight: 900; color: #111827; margin-bottom: 1.5rem; margin-top: 0;">Laporan Transisi EV Anda</h2>', unsafe_allow_html=True)
     with col_btn:
-        if st.button("⚙️ Sesuaikan Parameter"):
+        if safe_button("⚙️ Sesuaikan Parameter"):
             st.session_state.step = 1
             safe_rerun()
 
@@ -953,7 +973,7 @@ elif st.session_state.step == 2:
         with col_input: 
             user_input = st.text_input(" ", placeholder="Ketik pertanyaan lanjutan untuk AI (Misal: Apakah bengkel resminya banyak di Jakarta?).")
         with col_btn: 
-            submitted = st.form_submit_button("Kirim")
+            submitted = safe_form_submit_button("Kirim")
 
     # EKSEKUSI CHAT DENGAN ANIMASI GEMINI
     if submitted and user_input:
