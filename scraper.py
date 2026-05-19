@@ -50,10 +50,10 @@ def get_bbm_price(jenis_bbm="Pertalite"):
             url = "https://mypertamina.id/about/product-price"
             
             logging.info(f"Membuka {url} dengan Playwright...")
-            page.goto(url, timeout=30000)
+            page.goto(url, timeout=10000)
             
             row_selector = "table tr:has-text('Prov. DKI Jakarta')"
-            page.wait_for_selector(row_selector, timeout=15000)
+            page.wait_for_selector(row_selector, timeout=3000)
             
             col_idx = 2
             if jenis_bbm.lower() == "pertamax":
@@ -76,7 +76,7 @@ def get_bbm_price(jenis_bbm="Pertalite"):
             return default_price
             
     except Exception as e:
-        logging.error(f"Gagal melakukan scraping harga BBM dengan Playwright: {e}")
+        logging.warning(f"Gagal mengambil harga BBM dinamis dari MyPertamina (kemungkinan diblokir Cloudflare/anti-bot di server Cloud). Menggunakan harga default {jenis_bbm}: Rp {default_price:,}")
         return default_price
 
 def get_pln_tariffs():
