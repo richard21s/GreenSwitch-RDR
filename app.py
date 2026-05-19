@@ -43,7 +43,7 @@ def safe_form_submit_button(label, **kwargs):
         raise e
 
 # --- Setup API Key ---
-DEFAULT_API_KEY = "AIzaSyDtjBLKueN0l8wOsqJSVWjMvp5DRP5NZWM"
+DEFAULT_API_KEY = "AIzaSyC0Uu6OnFL7SEELAMn0f-R745GqfMYMdbc"
 
 # ─── Konfigurasi halaman ──────────────────────────────────────────────
 from PIL import Image
