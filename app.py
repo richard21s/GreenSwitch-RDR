@@ -95,11 +95,15 @@ st.markdown("""
         background-color: #f9fafb !important;
         border-radius: 1rem !important;
         border: 1px solid #e5e7eb !important;
-        padding: 0.3rem 0.5rem !important;
         font-weight: 600 !important;
         color: #1f2937 !important;
         box-shadow: none !important;
         transition: all 0.2s ease !important;
+    }
+    
+    /* Hanya berikan padding kustom pada input (number/text), bukan selectbox agar teks tidak terpotong */
+    div[data-baseweb="input"] > div {
+        padding: 0.3rem 0.5rem !important;
     }
     
     /* Focus State Input -> ring-emerald-500 */
