@@ -45,7 +45,7 @@ Aplikasi ini menggunakan API Key Google Gemini agar fitur kecerdasan buatan dapa
 4. Cari baris **ke-46** yang berisi penugasan `DEFAULT_API_KEY`:
    ```python
    # --- Setup API Key ---
-   DEFAULT_API_KEY = "AIzaSyDtjBLKueN0l8wOsqJSVWjMvp5DRP5NZWM"
+   DEFAULT_API_KEY = "AIzaSyC0Uu6OnFL7SEELAMn0f-R745GqfMYMdbc"
    ```
 5. Ganti teks string tersebut dengan API key baru yang Anda salin dari AI Studio:
    ```python
