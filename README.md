@@ -55,15 +55,6 @@ GreenSwitch menggunakan data terpercaya untuk menghitung biaya BBM dan listrik. 
 
 1. **Harga BBM Terkini:** Mengambil struktur harga JSON publik secara langsung dari REST API resmi MyPertamina (`https://api.web.mypertamina.id/price`). Data yang difilter adalah Pertalite, Pertamax, dan Pertamax Turbo di wilayah DKI Jakarta.
 2. **Tarif Listrik PLN:** Data tarif listrik tidak diambil secara otomatis (scraping), melainkan diacu secara faktual berdasarkan rilis resmi tabel penyesuaian tarif (*Tariff Adjustment*) dari website resmi PLN (`https://www.pln.co.id/customer-en/electricity-tariffs-en/tariff-adjustment-en`). Data ini mencakup tarif per kWh untuk berbagai golongan rumah tangga umum (R-1/900 VA hingga R-2/3500+ VA).
-3. **Kalkulasi Emisi CO2 yang Dihemat (Dampak Lingkungan):**
-   Aplikasi ini mengkalkulasi pengurangan emisi karbon secara presisi berdasarkan standar faktor emisi rata-rata kendaraan berbahan bakar minyak (BBM) di Indonesia:
-   - **Sepeda Motor BBM:** Menggunakan faktor emisi sebesar **0,075 kg CO2 per kilometer** (atau 75 gram CO2/km).
-   - **Mobil BBM:** Menggunakan faktor emisi sebesar **0,23 kg CO2 per kilometer** (atau 230 gram CO2/km).
-   
-   **Rumus Kalkulasi Emisi Bulanan:**
-   $$\text{Emisi CO2 Bulanan yang Dihemat (kg)} = \text{Jarak Tempuh Harian (km)} \times 30 \text{ hari} \times \text{Faktor Emisi}$$
-   
-   Data emisi ini menjadi dasar bagi *AI Agent* untuk menyusun laporan analisis dampak lingkungan, sehingga pengguna dapat memahami secara konkret seberapa besar kontribusi transisi mereka dalam mengurangi jejak karbon global.
 
 ### Mengapa Hanya Data Ini yang Diambil Secara Live?
 Dua variabel ini (Harga BBM non-subsidi dan Tarif Penyesuaian Listrik) **bersifat sangat fluktuatif** dan kebijakan penyesuaian harga (naik/turun) sering kali diterapkan oleh pemerintah setiap bulannya. 
