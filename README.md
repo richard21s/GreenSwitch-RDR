@@ -24,41 +24,28 @@ Cukup buka tautan berikut melalui browser komputer Anda:
  **[https://greenswitch-rdr.streamlit.app/](https://greenswitch-rdr.streamlit.app/)**
 
  > [!NOTE]
-> **Penting:** Kode dalam repositori ini telah dikustomisasi dan dioptimalkan secara khusus untuk berjalan di atas arsitektur *Streamlit Cloud* (termasuk injeksi Javascript lintas-iframe khusus). Aplikasi ini **tidak ditujukan untuk dijalankan di lingkungan lokal (localhost)** karena akan terjadi inkonsistensi struktur DOM dan antarmuka.
+> **Penting:** Kode dalam repositori ini telah dikustomisasi dan dioptimalkan secara khusus untuk berjalan di atas arsitektur *Streamlit Cloud* (termasuk injeksi Javascript lintas-iframe khusus). Aplikasi ini **tidak disarankan untuk dijalankan di lingkungan lokal (localhost)** karena akan terjadi inkonsistensi struktur DOM dan antarmuka.
 
 ### Skenario Penggunaan Aplikasi:
 1. **Memulai Analisis:** Di halaman depan (Hero Section), baca sekilas lalu klik tombol hijau **"Mulai Analisis ➔"**.
-2. **Mengisi Profil Kendaraan:** Anda akan masuk ke bagian formulir. Silakan pilih jenis kendaraan BBM Anda saat ini (misal: Motor Matic), lalu masukkan estimasi jarak tempuh harian Anda menggunakan *slider*. Tentukan juga budget Anda jika ingin membeli EV (misal: Rp 20 Juta).
+2. **Mengisi Profil Kendaraan:** Anda akan masuk ke bagian formulir. Silakan pilih jenis kendaraan BBM Anda saat ini (misal: Motor Matic), lalu masukkan estimasi jarak tempuh harian Anda menggunakan *slider*. Tentukan juga budget Anda jika ingin membeli EV (misal: Rp 20 Juta). **(Opsional)** Anda juga dapat memasukkan Gemini API Key pribadi Anda pada kolom input di kanan bawah untuk menghindari limit kuota API bersama. Status di bawah kolom input akan berubah secara reaktif untuk menunjukkan API Key yang sedang aktif.
 3. **Kalkulasi Cerdas AI:** Klik tombol **"✨ Analisis dengan Agent"**. Sistem akan otomatis menarik harga BBM Pertalite/Pertamax secara langsung dari internet, mencocokkannya dengan profil Anda, dan meracik rekomendasi finansial.
 4. **Membaca Laporan ROI:** Sebuah laporan rapi akan muncul. Anda bisa melihat perbandingan pengeluaran BBM vs Listrik per bulan, jumlah bulan hingga balik modal (*Break Even Point*), dan daftar unit mobil/motor EV asli (lengkap dengan harga dan daya jelajahnya) yang direkomendasikan AI khusus untuk Anda.
 5. **Diskusi Lanjutan (Chatbot AI):** Jika Anda masih ragu atau punya pertanyaan lain, *scroll* ke bagian paling bawah. Terdapat kolom chat di mana Anda bisa mengobrol santai dengan AI (Contoh: *"Dari rekomendasi motor EV tadi, mana yang paling tahan banjir?"*). AI akan menjawab berdasarkan konteks profil Anda.
 
-## 3. Cara Mengganti API Key (Jika Terkena Limit / Kuota Habis)
+## 3. Konfigurasi & Penggunaan Gemini API Key
 
-Aplikasi ini menggunakan API Key Google Gemini agar fitur kecerdasan buatan dapat bekerja. Anda harus mengganti API Key jika menemukan **Ciri-ciri API Key Limit / Kuota Habis** berikut ini:
+Aplikasi ini menggunakan API Key Google Gemini agar fitur kecerdasan buatan dapat bekerja. Anda harus mengganti API Key dengan mengisi bagian Gemini API Key (Opsional) pada bagian profil pengguna jika menemukan **Ciri-ciri API Key Limit / Kuota Habis** berikut ini:
 - Jika fitur *chatbot* menjawab dengan kalimat: *"Maaf, agent sedang mengalami gangguan saat merespons."*
 - Jika pada bagian Rekomendasi/Keputusan Agen terdapat kata-kata **"(Fallback)"** (ini menandakan AI gagal merespons dan sistem terpaksa mengeluarkan teks *default*).
-
-**API KEY alternatif yang dapat digunakan**
-1. AIzaSyDtjBLKueN0l8wOsqJSVWjMvp5DRP5NZWM
-2. AIzaSyD19lP8AxRZuj8fvKlIf3NBx6VSXQmNHYk
 
 **Langkah Mengganti API Key:**
 1. Kunjungi situs [Google AI Studio](https://aistudio.google.com/app/apikey) dan login menggunakan akun Google Anda.
 2. Klik tombol **"Create API key"** di project baru Anda untuk membuat kunci rahasia secara gratis. Salin (Copy) kode yang diberikan (diawali dengan `AIzaSy...`).
-3. Buka berkas **`app.py`** menggunakan Text Editor (VS Code, Notepad, dll).
-4. Cari baris **ke-46** yang berisi penugasan `DEFAULT_API_KEY`:
-   ```python
-   # --- Setup API Key ---
-   DEFAULT_API_KEY = "AIzaSyC0Uu6OnFL7SEELAMn0f-R745GqfMYMdbc"
-   ```
-5. Ganti teks string tersebut dengan API key baru yang Anda salin dari AI Studio:
-   ```python
-   DEFAULT_API_KEY = "MASUKAN_API_KEY_ANDA_YANG_BARU_DI_SINI"
-   ```
-6. **Simpan file (`Ctrl+S`)**.
-7. Jika di lokal, aplikasi akan me- *reload* secara otomatis. Jika di Cloud (seperti GitHub ke Streamlit Cloud), lakukan *commit* dan *push* perubahan tersebut ke GitHub untuk menerapkan API Key baru di server online.
-
+3. Masuk ke halaman formulir **Profil Kendaraan** di aplikasi GreenSwitch.
+4. Pada kolom **"Gemini API Key (Opsional)"**, masukkan API Key pribadi yang sudah Anda buat.
+5. Perhatikan indikator di bawah kolom tersebut yang secara reaktif berubah menjadi hijau: **"🔑 Menggunakan API Key pribadi yang Anda masukkan di atas."**
+6. Klik **"✨ Analisis dengan Agent"**. Agen AI akan langsung berjalan menggunakan kuota API Key pribadi Anda sendiri secara aman.
 
 ---
 
