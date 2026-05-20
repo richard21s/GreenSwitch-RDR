@@ -11,6 +11,9 @@ class EnergyTransitAgent:
     def __init__(self, api_key=None):
         self.api_key = api_key
         if self.api_key:
+            # Masking API key untuk keamanan log agar tidak bocor
+            masked_key = f"{self.api_key[:4]}...{self.api_key[-4:]}" if len(self.api_key) > 8 else "***"
+            logging.info(f"[DEBUG LOG] Menginisialisasi Gemini Agent dengan API Key: {masked_key}")
             genai.configure(api_key=self.api_key)
             try:
                 # Cari model yang tersedia dan mendukung generateContent
@@ -27,6 +30,7 @@ class EnergyTransitAgent:
                 self.model = None
                 logging.error(f"Gagal menginisialisasi model: {e}")
         else:
+            logging.warning("[DEBUG LOG] Menginisialisasi Gemini Agent TANPA API Key (Mode Fallback Statis Aktif).")
             self.model = None
             self.chat_session = None
 
