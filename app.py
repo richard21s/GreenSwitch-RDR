@@ -42,8 +42,18 @@ def safe_form_submit_button(label, **kwargs):
             return st.form_submit_button(label, **kwargs)
         raise e
 
-# --- Setup API Key ---
-DEFAULT_API_KEY = "AIzaSyC0Uu6OnFL7SEELAMn0f-R745GqfMYMdbc"
+# Mengambil API key dari Streamlit secrets atau environment variables demi keamanan (tidak hardcoded)
+DEFAULT_API_KEY = None
+try:
+    if "GEMINI_API_KEY" in st.secrets:
+        DEFAULT_API_KEY = st.secrets["GEMINI_API_KEY"]
+    elif "gemini_api_key" in st.secrets:
+        DEFAULT_API_KEY = st.secrets["gemini_api_key"]
+except Exception:
+    pass
+if not DEFAULT_API_KEY:
+    import os
+    DEFAULT_API_KEY = os.environ.get("GEMINI_API_KEY")
 
 # ─── Konfigurasi halaman ──────────────────────────────────────────────
 from PIL import Image
@@ -511,9 +521,14 @@ GEMINI_API_KEY = DEFAULT_API_KEY
 # ─── Init State & Agent ───────────────────────────────────────────────
 if 'step' not in st.session_state:
     st.session_state.step = 0
-if 'agent' not in st.session_state or st.session_state.get('last_api_key') != GEMINI_API_KEY:
-    st.session_state.agent = EnergyTransitAgent(api_key=GEMINI_API_KEY)
-    st.session_state.last_api_key = GEMINI_API_KEY
+if 'custom_api_key' not in st.session_state:
+    st.session_state.custom_api_key = ""
+# Prioritaskan custom API Key dari UI, jika kosong gunakan key default dari secrets/env
+active_api_key = st.session_state.custom_api_key or GEMINI_API_KEY
+if 'agent' not in st.session_state or st.session_state.get('last_api_key') != active_api_key:
+    st.session_state.agent = EnergyTransitAgent(api_key=active_api_key)
+    st.session_state.last_api_key = active_api_key
+
 if "conversation" not in st.session_state: 
     st.session_state.conversation = []
 if "parsed_result" not in st.session_state: 
@@ -621,8 +636,12 @@ elif st.session_state.step == 1:
             pln_idx = st.selectbox("Daya Listrik Rumah (PLN)", range(len(PLN_TARIFFS)), format_func=lambda i: f"{PLN_TARIFFS[i]['label']} (Rp {PLN_TARIFFS[i]['tarif']}/kWh)")
             anggaran = st.number_input("Budget Beli EV (Juta Rp)", min_value=10, max_value=2000, value=300, step=10)
             trade_in_juta = st.number_input("Nilai Jual Kendaraan Lama (Juta Rp)", min_value=0, max_value=1000, value=15, step=1)
-            
-            st.markdown("<br><br>", unsafe_allow_html=True)
+            custom_key = st.text_input(
+                "Gemini API Key (Opsional)", 
+                type="password", 
+                value=st.session_state.get("custom_api_key", ""),
+                help="Masukkan API Key Gemini Anda sendiri untuk menghindari limit pada key bersama."
+            )
         
         # Kalkulasi Live Preview di dalam form
         konsumsi_km_per_liter = KENDARAAN[kendaraan_idx]["konsumsi"]
@@ -651,6 +670,13 @@ elif st.session_state.step == 1:
             analyze_btn = safe_button("✨ Analisis dengan Agent")
         
     if analyze_btn:
+        # Simpan custom API key dan re-inisialisasi agent jika key berubah
+        st.session_state.custom_api_key = custom_key
+        current_active_key = custom_key or GEMINI_API_KEY
+        if st.session_state.get('last_api_key') != current_active_key:
+            st.session_state.agent = EnergyTransitAgent(api_key=current_active_key)
+            st.session_state.last_api_key = current_active_key
+            
         st.session_state.user_data = {
             "kendaraan_jenis": KENDARAAN[kendaraan_idx]["jenis"],
             "konsumsi_km_per_liter": KENDARAAN[kendaraan_idx]["konsumsi"],
