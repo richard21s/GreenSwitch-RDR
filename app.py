@@ -639,12 +639,12 @@ elif st.session_state.step == 1:
             custom_key = st.text_input(
                 "Gemini API Key (Opsional)", 
                 type="password", 
-                value=st.session_state.get("custom_api_key", ""),
+                key="custom_api_key",
                 help="Masukkan API Key Gemini Anda sendiri untuk menghindari limit pada key bersama."
             )
             
             # Tampilkan info API Key yang sedang aktif saat ini
-            if st.session_state.get("custom_api_key"):
+            if custom_key:
                 st.markdown(
                     "<p style='color: #059669; font-size: 0.82rem; font-weight: 600; margin-top: -10px; margin-bottom: 10px;'>"
                     "🔑 Menggunakan API Key pribadi yang Anda masukkan di atas."
