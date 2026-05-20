@@ -71,3 +71,40 @@ Dua variabel ini (Harga BBM non-subsidi dan Tarif Penyesuaian Listrik) **bersifa
 Mengambil data ini secara *real-time* adalah langkah **sangat krusial** agar perhitungan komparasi biaya operasional dan ROI (Return of Investment) dari *AI Agent* selalu menggunakan angka pasar hari ini, sehingga laporan kelayakan yang diberikan terhindar dari bias data statis yang sudah usang.
 
 Sedangkan untuk variabel lain, khususnya **data referensi mobil/motor Listrik (EV)** yang direkomendasikan beserta kisaran harganya, data tersebut dikumpulkan secara **manual** dengan merujuk langsung pada brosur dan situs web resmi dari masing-masing agen pemegang merek (APM) kendaraan terkait. Hal ini dilakukan untuk menjamin keakuratan tipe unit dan harga on-the-road (OTR) yang paling relevan dengan kondisi pasar saat ini, tanpa perlu membebani server dengan proses *scraping* berlebihan.
+
+---
+
+## 5. Dokumen Formula & Metodologi Perhitungan
+GreenSwitch menerapkan formulasi matematika dan ekonomi transisi energi secara transparan untuk menyajikan perbandingan finansial dan lingkungan yang presisi:
+### A. Biaya Operasional BBM Bulanan
+Menghitung total pengeluaran bulanan pengguna untuk konsumsi bahan bakar fosil berdasarkan jarak tempuh dan efisiensi kendaraan.
+$$\text{Biaya BBM Bulanan (Rp)} = \left( \frac{\text{Jarak Tempuh Harian (km)} \times 30 \text{ hari}}{\text{Efisiensi BBM (km/liter)}} \right) \times \text{Harga BBM per Liter (Rp)}$$
+*   **Harga BBM:** Diambil secara live dari API MyPertamina berdasarkan pilihan jenis bahan bakar (Pertalite, Pertamax, atau Pertamax Turbo).
+---
+### B. Biaya Operasional Listrik EV Bulanan
+Menghitung estimasi biaya pengisian daya listrik bulanan kendaraan listrik berdasarkan efisiensi daya mesin EV dan tarif listrik PLN rumah tangga pengguna.
+$$\text{Kebutuhan Energi Bulanan (kWh)} = (\text{Jarak Tempuh Harian (km)} \times 30 \text{ hari}) \times \text{Konsumsi Daya per km (kWh/km)}$$
+$$\text{Biaya Listrik Bulanan (Rp)} = \text{Kebutuhan Energi Bulanan (kWh)} \times \text{Tarif PLN per kWh (Rp)}$$
+*   **Standar Efisiensi Daya Kendaraan Listrik (EV):**
+    *   **Motor Listrik:** Diestimasikan mampu menempuh **25 km per kWh** ($\text{Konsumsi Daya} = 0,04 \text{ kWh/km}$).
+    *   **Mobil Listrik:** Diestimasikan mampu menempuh **7,14 km per kWh** ($\text{Konsumsi Daya} = 0,14 \text{ kWh/km}$).
+*   **Tarif PLN:** Ditentukan dari daya listrik rumah yang dipilih oleh pengguna berdasarkan rilis tarif resmi terbaru PLN.
+---
+### C. Penghematan Bersih Bulanan (Monthly Net Savings)
+Menghitung selisih keuntungan finansial bersih yang diperoleh pengguna setiap bulan setelah bermigrasi ke kendaraan listrik.
+$$\text{Penghematan Bulanan (Rp)} = \text{Biaya BBM Bulanan (Rp)} - \text{Biaya Listrik Bulanan (Rp)}$$
+---
+### D. Investasi Bersih Transisi (Net Capital Outlay)
+Menghitung modal bersih aktual yang dikeluarkan pengguna untuk membeli unit EV baru setelah dikurangi nilai taksir jual kendaraan BBM lamanya (*trade-in*).
+$$\text{Investasi Bersih (Rp)} = \max(0, \text{Budget Beli EV (Rp)} - \text{Nilai Jual Kendaraan Lama (Rp)})$$
+---
+### E. Titik Balik Modal / Break Even Point (BEP)
+Menghitung jangka waktu (dalam bulan) yang dibutuhkan pengguna hingga seluruh biaya modal bersih pembelian EV tertutupi oleh akumulasi penghematan operasional bulanan.
+$$\text{BEP (Bulan)} = \frac{\text{Investasi Bersih (Rp)}}{\text{Penghematan Bulanan (Rp)}}$$
+*   Jika penghematan bulanan bernilai negatif atau nol, nilai BEP tidak dapat diproyeksikan (AI Agent akan menyarankan penundaan transisi).
+---
+### F. Emisi CO2 yang Dihemat (Dampak Lingkungan)
+Menghitung massa gas karbon monoksida/dioksida yang berhasil dicegah agar tidak lepas ke atmosfer bumi akibat berhentinya penggunaan kendaraan BBM fosil.
+$$\text{Emisi CO2 Bulanan yang Dihemat (kg)} = \text{Jarak Tempuh Harian (km)} \times 30 \text{ hari} \times \text{Faktor Emisi (kg CO2/km)}$$
+*   **Faktor Emisi Sepeda Motor BBM:** $0,075 \text{ kg CO2/km}$ (75 gram CO2/km, dirujuk dari Kemenhub & GIZ TRANSforM).
+*   **Faktor Emisi Mobil BBM:** $0,23 \text{ kg CO2/km}$ (230 gram CO2/km, diturunkan secara fisika-kimia dari pembakaran karbon bensin pada konsumsi rata-rata $10 \text{ km/liter}$).aping* berlebihan.
