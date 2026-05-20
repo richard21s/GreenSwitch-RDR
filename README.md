@@ -71,7 +71,9 @@ GreenSwitch menerapkan formulasi matematika dan ekonomi transisi energi secara t
 Menghitung total pengeluaran bulanan pengguna untuk konsumsi bahan bakar fosil berdasarkan jarak tempuh dan efisiensi kendaraan.
 $$\text{Biaya BBM Bulanan (Rp)} = \left( \frac{\text{Jarak Tempuh Harian (km)} \times 30 \text{ hari}}{\text{Efisiensi BBM (km/liter)}} \right) \times \text{Harga BBM per Liter (Rp)}$$
 *   **Harga BBM:** Diambil secara live dari API MyPertamina berdasarkan pilihan jenis bahan bakar (Pertalite, Pertamax, atau Pertamax Turbo).
+  
 ---
+
 ### B. Biaya Operasional Listrik EV Bulanan
 Menghitung estimasi biaya pengisian daya listrik bulanan kendaraan listrik berdasarkan efisiensi daya mesin EV dan tarif listrik PLN rumah tangga pengguna.
 $$\text{Kebutuhan Energi Bulanan (kWh)} = (\text{Jarak Tempuh Harian (km)} \times 30 \text{ hari}) \times \text{Konsumsi Daya per km (kWh/km)}$$
@@ -80,20 +82,28 @@ $$\text{Biaya Listrik Bulanan (Rp)} = \text{Kebutuhan Energi Bulanan (kWh)} \tim
     *   **Motor Listrik:** Diestimasikan mampu menempuh **25 km per kWh** ($\text{Konsumsi Daya} = 0,04 \text{ kWh/km}$).
     *   **Mobil Listrik:** Diestimasikan mampu menempuh **7,14 km per kWh** ($\text{Konsumsi Daya} = 0,14 \text{ kWh/km}$).
 *   **Tarif PLN:** Ditentukan dari daya listrik rumah yang dipilih oleh pengguna berdasarkan rilis tarif resmi terbaru PLN.
+
 ---
+
 ### C. Penghematan Bersih Bulanan (Monthly Net Savings)
 Menghitung selisih keuntungan finansial bersih yang diperoleh pengguna setiap bulan setelah bermigrasi ke kendaraan listrik.
 $$\text{Penghematan Bulanan (Rp)} = \text{Biaya BBM Bulanan (Rp)} - \text{Biaya Listrik Bulanan (Rp)}$$
+
 ---
+
 ### D. Investasi Bersih Transisi (Net Capital Outlay)
 Menghitung modal bersih aktual yang dikeluarkan pengguna untuk membeli unit EV baru setelah dikurangi nilai taksir jual kendaraan BBM lamanya (*trade-in*).
 $$\text{Investasi Bersih (Rp)} = \max(0, \text{Budget Beli EV (Rp)} - \text{Nilai Jual Kendaraan Lama (Rp)})$$
+
 ---
+
 ### E. Titik Balik Modal / Break Even Point (BEP)
 Menghitung jangka waktu (dalam bulan) yang dibutuhkan pengguna hingga seluruh biaya modal bersih pembelian EV tertutupi oleh akumulasi penghematan operasional bulanan.
 $$\text{BEP (Bulan)} = \frac{\text{Investasi Bersih (Rp)}}{\text{Penghematan Bulanan (Rp)}}$$
 *   Jika penghematan bulanan bernilai negatif atau nol, nilai BEP tidak dapat diproyeksikan (AI Agent akan menyarankan penundaan transisi).
+  
 ---
+
 ### F. Emisi CO2 yang Dihemat (Dampak Lingkungan)
 Menghitung massa gas karbon monoksida/dioksida yang berhasil dicegah agar tidak lepas ke atmosfer bumi akibat berhentinya penggunaan kendaraan BBM fosil.
 $$\text{Emisi CO2 Bulanan yang Dihemat (kg)} = \text{Jarak Tempuh Harian (km)} \times 30 \text{ hari} \times \text{Faktor Emisi (kg CO2/km)}$$
