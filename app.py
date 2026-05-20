@@ -654,7 +654,7 @@ elif st.session_state.step == 1:
             elif GEMINI_API_KEY:
                 st.markdown(
                     "<p style='color: #2563eb; font-size: 0.82rem; font-weight: 600; margin-top: -10px; margin-bottom: 10px;'>"
-                    "🌐 Menggunakan API Key bersama (default) dari secrets."
+                    "🌐 Menggunakan API Key bersama (default)."
                     "</p>", 
                     unsafe_allow_html=True
                 )
