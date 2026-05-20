@@ -642,6 +642,30 @@ elif st.session_state.step == 1:
                 value=st.session_state.get("custom_api_key", ""),
                 help="Masukkan API Key Gemini Anda sendiri untuk menghindari limit pada key bersama."
             )
+            
+            # Tampilkan info API Key yang sedang aktif saat ini
+            if st.session_state.get("custom_api_key"):
+                st.markdown(
+                    "<p style='color: #059669; font-size: 0.82rem; font-weight: 600; margin-top: -10px; margin-bottom: 10px;'>"
+                    "🔑 Menggunakan API Key pribadi yang Anda masukkan di atas."
+                    "</p>", 
+                    unsafe_allow_html=True
+                )
+            elif GEMINI_API_KEY:
+                st.markdown(
+                    "<p style='color: #2563eb; font-size: 0.82rem; font-weight: 600; margin-top: -10px; margin-bottom: 10px;'>"
+                    "🌐 Menggunakan API Key bersama (default) dari secrets."
+                    "</p>", 
+                    unsafe_allow_html=True
+                )
+            else:
+                st.markdown(
+                    "<p style='color: #dc2626; font-size: 0.82rem; font-weight: 600; margin-top: -10px; margin-bottom: 10px;'>"
+                    "⚠️ Tidak ada API Key aktif (aplikasi berjalan dalam mode fallback statis)."
+                    "</p>", 
+                    unsafe_allow_html=True
+                )
+        
         
         # Kalkulasi Live Preview di dalam form
         konsumsi_km_per_liter = KENDARAAN[kendaraan_idx]["konsumsi"]
