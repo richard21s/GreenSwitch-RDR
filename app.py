@@ -694,8 +694,7 @@ elif st.session_state.step == 1:
             analyze_btn = safe_button("✨ Analisis dengan Agent")
         
     if analyze_btn:
-        # Simpan custom API key dan re-inisialisasi agent jika key berubah
-        st.session_state.custom_api_key = custom_key
+        # Re-inisialisasi agent jika key berubah
         current_active_key = custom_key or GEMINI_API_KEY
         if st.session_state.get('last_api_key') != current_active_key:
             st.session_state.agent = EnergyTransitAgent(api_key=current_active_key)
